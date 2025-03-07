@@ -94,7 +94,7 @@ function Targetted(params) {
 }
 
 
-function updateBusDetails(busName, busNumber, seatsCapacity, stops, fromPoint, toPoint) {
+function updateBusDetails(busName, busNumber, seatsCapacity, stops, fromPoint, toPoint, id) {
     document.getElementById("busName").value = busName
     document.getElementById("busNumber").value = busNumber
     document.getElementById("seatsCapacity").value = seatsCapacity
@@ -330,8 +330,7 @@ function toast(message) {
 
 
 function deletFunctions(){
-    // const id=document.getElementById('myInputId').value
-    const busNumber = document.getElementById('busNumber').value;
+    const id=document.getElementById('myInputId').value
     fetch(`https://wizzie.online/BusTracking/delete.php?id=${id}`).then(view=>view.json()).then(
         pot=>{
             if(pot.message=="Success"){
@@ -347,7 +346,7 @@ function updateFunctons(){
     const stops=document.getElementById("stops").value
     const fromPoint=document.getElementById("fromPoint").value
     const toPoint=document.getElementById("toPoint").value
-    // const id=document.getElementById('myInputId').value
+    const id=document.getElementById('myInputId').value
     fetch(`https://wizzie.online/BusTracking/updateFun.php?name=${busName}&busNumber=${busNumber}&seats=${seatsCapacity}&stops=${stops}&fromPlace=${fromPoint}&toPlace=${toPoint}&id=${id}`).then(view=>view.json()).then(
     pot=>{
         if(pot.message=="Success"){
