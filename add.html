@@ -189,7 +189,7 @@
             <i class="bi bi-map"></i>
             <h3>Bus Routes</h3>
             <p>Manage and View Bus Routes.</p>
-            <a href="images/BusRoutes.xlsx">View Routes</a>
+            <a href="#" onclick="openExcelViewer('images/BusRoutes.xlsx')">View Routes</a>
         </div>
 
         <!-- Track/Assign Bus Card -->
@@ -219,30 +219,62 @@
     </div>
 
     <script>
-        function fetchFiles() {
-            fetch("/get-files")
-                .then(response => response.json())
-                .then(files => {
-                    const fileList = document.getElementById("fileList");
-                    fileList.innerHTML = "";
-                    files.forEach(file => {
-                        const li = document.createElement("li");
-                        const link = document.createElement("a");
-                        link.href = `/excel_files/${file}`;
-                        link.textContent = file;
-                        link.target = "_blank";
-                        li.appendChild(link);
-                        fileList.appendChild(li);
-                    });
-                    document.getElementById("fileModal").style.display = "block";
-                })
-                .catch(error => console.error("Error fetching files:", error));
+       fetch("/get-files")
+    .then(response => response.json())
+    .then(files => {
+        const fileList = document.getElementById("fileList");
+        fileList.innerHTML = "";
+
+        if (files.length === 0) {
+            fileList.innerHTML = "<li>No seating plans available.</li>";
+        } else {
+            files.forEach(file => {
+                const li = document.createElement("li");
+                const link = document.createElement("a");
+                link.href = `/excel_files/${file}`;
+                link.textContent = file;
+                link.target = "_blank";
+                li.appendChild(link);
+                fileList.appendChild(li);
+            });
         }
+        document.getElementById("fileModal").style.display = "block";
+    })
+    .catch(error => {
+        console.error("Error fetching files:", error);
+        document.getElementById("fileList").innerHTML = "<li>Error loading files.</li>";
+    });
+
 
         function closeModal() {
             document.getElementById("fileModal").style.display = "none";
         }
     </script>
+<div id="excelModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeExcelModal()">&times;</span>
+        <h3>Bus Routes</h3>
+        <iframe id="excelViewer" style="width: 100%; height: 500px;"></iframe>
+    </div>
+</div>
+<script>
+function openExcelViewer(fileUrl) {
+    const fullFilePath = window.location.href.replace(/\/[^/]*$/, '/') + fileUrl;
+    document.getElementById("excelViewer").src = `https://view.officeapps.live.com/op/embed.aspx?src=${fullFilePath}`;
+    document.getElementById("excelModal").style.display = "block";
+}
 
+
+function closeExcelModal() {
+    document.getElementById("excelModal").style.display = "none";
+}
+    window.onclick = function(event) {
+    const excelModal = document.getElementById("excelModal");
+    if (event.target == excelModal) {
+        closeExcelModal();
+    }
+};
+
+</script>
 </body>
 </html>
